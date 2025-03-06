@@ -1,4 +1,3 @@
-# importação
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
@@ -16,9 +15,6 @@ db = SQLAlchemy(application)
 login_manager.init_app(application)  # recebe app
 login_manager.login_view = 'login'  # rota pra autenticar usuário
 CORS(application)  # sistemas externos podem acessar o sistema
-
-# modelar o produto que armazena a info
-# linha=registro     coluna=info/campos (id,nome,preco,descricao)
 
 
 class User(db.Model, UserMixin):
@@ -124,7 +120,7 @@ def get_products():
         product_data = {
             "id": product.id,
             "name": product.name,
-            "price": product.price  # descrição apenas quando ver detalhes de produto individual
+            "price": product.price  
         }
         product_list.append(product_data)
     return jsonify(product_list)
@@ -151,13 +147,7 @@ def update_product(product_id):
     return jsonify({'message': 'Product Updated Successfully'})
 
 
-# rotas meios pelos quais APPs e usuários vão se comunicar com a API
-# endereço --> endpoint
-# Definir rota raiz(página inicial API) e a função executada ao requisitar
-
-
 # Checkout
-
 @application.route('/api/cart/add/<int:product_id>', methods=['POST'])
 @login_required
 def add_to_cart(product_id):
@@ -217,11 +207,3 @@ def checkout():
 if __name__ == "__main__":  # Significa que o arquivo está sendo executado diretamente, e não sendo importado por outro arquivo
     # ativando modo depuração, usar apenas durante desenvolvimento e não em produção(Quando tá valendo)
     application.run(debug=True)
-# Só dar play que inicia o servidor
-
-# Trabalhar com SQLite --> BD armazenado em arquivo de texto dentro do projeto, não num servidor a parte armazenando info
-# Recomendado para aplicações mais simples, sem muitos registros e atualizações sendo realizadas simultaneamente (facil gerar inconsistência e limitado)
-
-# SQLAlchemy --> ORM, Object Relational Mapper, gera camada de abstração pro BD. Código interage com esse, e o ORM interage com o BD
-# Se quiser mudar de BD, ORM facilita a mudança
-# Gera dependencia pq código vai depender de uma biblioteca externa, por isso algumas empresas não utilizam
